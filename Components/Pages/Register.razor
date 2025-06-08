@@ -1,0 +1,177 @@
+﻿@page "/register"
+@inject MyProject.Data.MainDBService DbService
+
+@code {
+    private RegisterUserModel newUser = new();
+    private string confirmPassword = string.Empty;
+    private string SuccessMessage = "";
+    private string ErrorMessage = "";
+
+    private void HandleRegister()
+    {
+        SuccessMessage = "";
+        ErrorMessage = "";
+
+        if (newUser.Password != confirmPassword)
+        {
+            ErrorMessage = "Passwords do not match.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(newUser.FullName) ||
+            string.IsNullOrWhiteSpace(newUser.Email) ||
+            string.IsNullOrWhiteSpace(newUser.Password))
+        {
+            ErrorMessage = "Please fill out all fields.";
+            return;
+        }
+
+        DbService.AddUser(
+            newUser.FullName,
+            newUser.Email,
+            newUser.Password,
+            "User" // default role
+        );
+
+        SuccessMessage = "User registered successfully!";
+        newUser = new();
+        confirmPassword = "";
+    }
+
+
+    public class RegisterUserModel
+    {
+        public string FullName { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Password { get; set; } = "";
+    }
+}
+<style>
+    /* סגנונות כלליים לגוף הדף */
+    body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f2f5;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* סגנונות לקונטיינר שמרכז את תיבת ההרשמה */
+    .register-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    /* סגנונות לתיבת ההרשמה עצמה */
+    .register-box {
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+    }
+
+    /* סגנונות לכותרת H3 בתוך התיבה */
+    h3 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    /* סגנונות לתוויות (labels) של שדות הטופס */
+    label {
+        font-weight: 600;
+        color: #444;
+    }
+
+    /* סגנונות לשדות הקלט (input) של הטופס */
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+    }
+
+        /* סגנונות לשדות הקלט כשהם במיקוד (לחוצים/פעילים) */
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+    /* סגנונות לכפתור השליחה */
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        /* סגנונות לכפתור בריחוף עכבר */
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    /* סגנונות להודעות שגיאה/הצלחה בתוך תיבת ההרשמה (לפי צבע הטקסט) */
+    .register-box div[style*="color: red"],
+    .register-box div[style*="color: green"] {
+        text-align: center;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+</style>
+
+
+<div class="register-container">
+    <div class="register-box">
+        <h3>Create New User</h3>
+
+        @if (!string.IsNullOrEmpty(SuccessMessage))
+        {
+            <div style="color: green">@SuccessMessage</div>
+        }
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div style="color: red">@ErrorMessage</div>
+        }
+
+        <EditForm Model="@newUser" OnValidSubmit="HandleRegister">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div>
+                <label>שם מלא:</label><br />
+                <InputText @bind-Value="newUser.FullName" />
+            </div>
+            <div>
+                <label>אימייל:</label><br />
+                <InputText @bind-Value="newUser.Email" />
+            </div>
+            <div>
+                <label>סיסמא:</label><br />
+                <InputText @bind-Value="newUser.Password" type="password" />
+            </div>
+          
+            <div>
+                <label>אימות סיסמא :</label><br />
+                <InputText @bind-Value="confirmPassword" type="password" />
+            </div>
+
+            <br />
+            <button type="submit">Register</button>
+        </EditForm>
+
+       
+    </div>
+</div>

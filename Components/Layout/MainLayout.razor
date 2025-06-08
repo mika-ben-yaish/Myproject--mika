@@ -1,0 +1,70 @@
+﻿@inherits LayoutComponentBase
+
+<div class="main-layout">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/">Home🕎</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/register">Register🕎</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/joinuss">LogIn🕎</a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="/extrime">History🕎</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/explore">Explore🕎</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/guess-destination">Game🕎</a>
+                        </li>
+                       
+
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-grow-1">
+        @Body
+    </main>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+        </div>
+    </footer>
+</div>
+
+<style>
+    .main-layout {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    main {
+        flex-grow: 1;
+        padding: 40px;
+    }
+
+    .navbar-nav {
+        margin: 0 auto; /* ממקם את התפריט במרכז */
+    }
+
+    .navbar-collapse {
+        justify-content: center; /* מבטיח שהפריטים בתוך התפריט יהיו ממורכזים */
+    }
+</style>

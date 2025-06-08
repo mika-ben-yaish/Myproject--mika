@@ -1,0 +1,193 @@
+﻿@page "/extrime"
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>היסטוריה חיה של ישראל</title>
+    <style>
+        /* עיצוב כללי של הדף */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, #eef2f3, #dfe9f3);
+            color: #333;
+            text-align: center;
+        }
+
+        /* עיצוב החלק העליון */
+        .header {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url('Images/Israel.jpg') center/cover no-repeat;
+            height: 280px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 36px;
+            font-weight: bold;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        /* עיצוב אזור התוכן */
+        .content-container {
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #1e3d59;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        /* ציר הזמן */
+        .timeline-container {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+        }
+
+        /* תצוגת אירועים */
+        .event {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: right;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            .event:hover {
+                transform: scale(1.01);
+                box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+            }
+
+        .event-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #004aad;
+            margin-bottom: 5px;
+        }
+
+        .event-date {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        /* חלון מודאלי */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 14px;
+            padding: 25px;
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+            .modal-content img {
+                width: 100%;
+                border-radius: 10px;
+                margin-bottom: 20px;
+            }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: crimson;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+            .close-button:hover {
+                background: darkred;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="header">היסטוריה חיה של ישראל</div>
+
+    <div class="content-container">
+        <h1>מסע בזמן: רגעים ששינו את פני המדינה</h1>
+        <p>הקליקו על כל אירוע כדי לגלות עוד.</p>
+
+        <div class="timeline-container">
+            <div class="event" onclick="showModal('הכרזת העצמאות', 'ב-14 במאי 1948, דוד בן-גוריון הכריז על הקמת מדינת ישראל.', 'Images/images.jpg')">
+                <div class="event-title">הכרזת העצמאות</div>
+                <div class="event-date">14 במאי 1948</div>
+            </div>
+
+            <div class="event" onclick="showModal('מלחמת העצמאות', 'מלחמה קשה שנמשכה עד 1949 והסתיימה בהסכמי שביתת נשק.', 'Images/golda14-460x305.jpg')">
+                <div class="event-title">מלחמת העצמאות</div>
+                <div class="event-date">1948 - 1949</div>
+            </div>
+
+            <div class="event" onclick="showModal('מלחמת ששת הימים', 'מלחמה קצרה שבה ישראל הרחיבה את גבולותיה.', 'Images/zanhanim.jpg')">
+                <div class="event-title">מלחמת ששת הימים</div>
+                <div class="event-date">5–10 ביוני 1967</div>
+            </div>
+
+            <div class="event" onclick="showModal('מלחמת יום כיפור', 'הפתעה קשה לישראל ביום הקדוש ביותר.', 'Images/images (1).jpg')">
+                <div class="event-title">מלחמת יום כיפור</div>
+                <div class="event-date">אוקטובר 1973</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- חלון מידע קופץ -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button class="close-button" onclick="closeModal()">סגור ✖</button>
+            <img id="modal-image" src="" alt="תמונה היסטורית">
+            <h2 id="modal-title"></h2> <!-- אלמנט להצגת שם האירוע -->
+            <p id="modal-description"></p> <!-- אלמנט להצגת תיאור האירוע -->
+        </div>
+    </div>
+
+    <script>
+        function showModal(title, description, image) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-description').innerText = description;
+            document.getElementById('modal-image').src = image;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+﻿@page "/guess-destination"
+@using System.Timers
+
+<h3 style="text-align:center; color:#0078D7; font-family:Arial, sans-serif;">🌟 משחק נחש מי - יעדים בארץ 🌍</h3>
+
+<div style="background-color:#f0f8ff; border-radius:10px; padding:20px; max-width:600px; margin:0 auto; font-family:Arial, sans-serif; color:#333;">
+    <p style="font-size:18px; font-weight:bold;">❓ שאלה: @CurrentQuestion</p>
+
+    @foreach (var option in CurrentOptions)
+    {
+        <button style="background-color:@(IsAnswerChecked && option == CorrectAnswer ? "#4CAF50" : IsAnswerChecked && option != CorrectAnswer ? "#f44336" : "#FF5722");
+                        color:white; padding:10px 15px; border:none; border-radius:5px; margin:5px; font-size:16px; cursor:pointer;"
+                @onclick="() => CheckAnswer(option)" disabled="@IsAnswerChecked">
+            😊 @option
+        </button>
+    }
+
+    @if (!string.IsNullOrEmpty(Feedback))
+    {
+        <p style="margin-top:20px; font-size:18px; font-weight:bold; color:@(IsCorrect ? "green" : "red");">
+            @Feedback
+        </p>
+        <button style="background-color:#0078D7; color:white; padding:10px 15px; border:none; border-radius:5px; margin:5px; font-size:16px; cursor:pointer;" @onclick="NextQuestion">
+            🔄 שאלה הבאה
+        </button>
+    }
+</div>
+
+<h3 style="text-align:center; color:#0078D7; font-family:Arial, sans-serif; margin-top:40px;">✨ שאלון התאמת יעד אישי ✨</h3>
+
+<div style="background-color:#fff8dc; border-radius:10px; padding:20px; max-width:600px; margin:0 auto; font-family:Arial, sans-serif; color:#333;">
+    @if (CurrentQuizQuestion < QuizQuestions.Count)
+    {
+        <p style="font-size:18px; font-weight:bold;">❓ שאלה @CurrentQuizQuestion מתוך @QuizQuestions.Count: @QuizQuestions[CurrentQuizQuestion]</p>
+
+        @foreach (var option in QuizAnswers[CurrentQuizQuestion])
+        {
+            <button style="background-color:#0078D7; color:white; padding:10px 15px; border:none; border-radius:5px; margin:5px; font-size:16px; cursor:pointer;"
+                    @onclick="() => RecordAnswer(option)">
+                😊 @option
+            </button>
+        }
+    }
+    else
+    {
+        <p style="font-size:18px; font-weight:bold; color:#0078D7;">✨ היעד האולטימטיבי שלך הוא: @UltimateDestination! ✨</p>
+        <button style="background-color:#4CAF50; color:white; padding:10px 15px; border:none; border-radius:5px; margin:5px; font-size:16px; cursor:pointer;" @onclick="RestartQuiz">
+            🔄 התחל מחדש
+        </button>
+    }
+</div>
+
+<h3 style="text-align:center; color:#0078D7; font-family:Arial, sans-serif; margin-top:40px;">🔥 אתגר הלחיצות ב-10 שניות 🔥</h3>
+
+<div style="background-color:#e6f7ff; border-radius:10px; padding:20px; max-width:600px; margin:0 auto; text-align:center; font-family:Arial, sans-serif;">
+    @if (!GameStarted)
+    {
+        <button @onclick="StartClickGame" style="background-color:#FF9800; color:white; font-size:18px; padding:12px 20px; border:none; border-radius:8px; cursor:pointer;">🎯 התחל משחק</button>
+    }
+    else
+    {
+        <p style="font-size:18px;">⌛ נשארו: <b>@TimeLeft</b> שניות</p>
+        <button @onclick="Click" style="background-color:#2196F3; color:white; font-size:22px; padding:15px 30px; border:none; border-radius:10px; cursor:pointer;">👆 לחץ!</button>
+    }
+
+    @if (ShowScore)
+    {
+        <p style="font-size:20px; font-weight:bold; color:#4CAF50;">💥 סיימת עם @ClickCount לחיצות!</p>
+        <h4 style="margin-top:20px;">🏆 טבלת שיאים</h4>
+        <ol style="text-align:left; padding-left:40px;">
+            @foreach (var score in ClickScores.Select((value, index) => new { value, index }))
+            {
+                <li style="font-weight:@(score.index == 0 ? "bold" : "normal"); color:@(score.index == 0 ? "#d32f2f" : "#333");">
+                    מקום @(score.index + 1): @score.value לחיצות
+                </li>
+            }
+        </ol>
+    }
+</div>
+
+@code {
+    // משחק 1
+    private List<Destination> Destinations = new List<Destination>();
+    private string CurrentQuestion;
+    private List<string> CurrentOptions = new List<string>();
+    private string Feedback;
+    private string CorrectAnswer;
+    private bool IsCorrect;
+    private bool IsAnswerChecked;
+
+    // משחק 2
+    private int CurrentQuizQuestion = 0;
+    private List<string> QuizQuestions = new()
+    {
+        "?מה אתה מעדיף - ים או מדבר",
+        "?מה התקציב שלך",
+        "?מה חשוב לך יותר - נופים או פעילויות",
+        "?האם אתה מחפש חופשה רגועה או תוססת",
+        "?כמה זמן תכננת להישאר"
+    };
+
+    private List<List<string>> QuizAnswers = new()
+    {
+        new() { "ים", "מדבר" },
+        new() { "נמוך", "בינוני", "גבוה" },
+        new() { "נופים", "פעילויות" },
+        new() { "רגועה", "תוססת" },
+        new() { "קצרה", "ארוכה" }
+    };
+
+    private Dictionary<string, int> DestinationScores = new()
+    {
+        { "ים המלח", 0 }, { "ירושלים", 0 }, { "אילת", 0 },
+        { "תל אביב", 0 }, { "הגליל", 0 }, { "מדבר יהודה", 0 }
+    };
+
+    private string UltimateDestination = string.Empty;
+
+    public class Destination
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        Destinations = new()
+        {
+            new() { Name = "ים המלח", Description = "הנקודה הנמוכה ביותר בעולם, ידוע בזכות מי המלח המרפאים" },
+            new() { Name = "ירושלים", Description = "בירת ישראל, עיר עתיקה עם היסטוריה עשירה ואתרים דתיים" },
+            new() { Name = "אילת", Description = "עיר נופש דרומית עם חופי ים יפים וריף דולפינים" },
+            new() { Name = "תל אביב", Description = "עיר תוססת עם חיי לילה, תרבות וחופים" },
+            new() { Name = "הגליל", Description = "אזור ירוק בצפון עם נופים מרהיבים ואוויר צח" },
+            new() { Name = "מדבר יהודה", Description = "אזור מדברי יפהפה עם שמורות טבע, מצוקים ומסלולי טיול" }
+        };
+
+        GenerateQuestion();
+    }
+
+    private void GenerateQuestion()
+    {
+        var random = new Random();
+        var selected = Destinations[random.Next(Destinations.Count)];
+        CurrentQuestion = selected.Description;
+        CorrectAnswer = selected.Name;
+        CurrentOptions = Destinations.Select(d => d.Name).OrderBy(_ => random.Next()).ToList();
+        Feedback = null;
+        IsAnswerChecked = false;
+    }
+
+    private void CheckAnswer(string option)
+    {
+        IsAnswerChecked = true;
+        IsCorrect = option == CorrectAnswer;
+        Feedback = IsCorrect ? "✅ תשובה נכונה!" : $"❌ תשובה שגויה! התשובה הנכונה הייתה {CorrectAnswer}";
+    }
+
+    private void NextQuestion() => GenerateQuestion();
+
+    private void RecordAnswer(string option)
+    {
+        switch (CurrentQuizQuestion)
+        {
+            case 0:
+                if (option == "ים") { DestinationScores["אילת"] += 2; DestinationScores["ים המלח"] += 2; DestinationScores["תל אביב"] += 1; }
+                else { DestinationScores["ים המלח"] += 1; DestinationScores["מדבר יהודה"] += 2; }
+                break;
+            case 1:
+                if (option == "נמוך") { DestinationScores["הגליל"] += 2; }
+                else if (option == "בינוני") { DestinationScores["ירושלים"] += 2; }
+                else { DestinationScores["אילת"] += 2; DestinationScores["תל אביב"] += 2; }
+                break;
+            case 2:
+                if (option == "נופים") { DestinationScores["הגליל"] += 2; DestinationScores["מדבר יהודה"] += 1; }
+                else { DestinationScores["תל אביב"] += 2; DestinationScores["אילת"] += 1; }
+                break;
+            case 3:
+                if (option == "רגועה") { DestinationScores["ים המלח"] += 2; DestinationScores["הגליל"] += 2; }
+                else { DestinationScores["תל אביב"] += 2; DestinationScores["אילת"] += 2; }
+                break;
+            case 4:
+                if (option == "קצרה") { DestinationScores["ירושלים"] += 2; DestinationScores["תל אביב"] += 1; }
+                else { DestinationScores["אילת"] += 2; DestinationScores["הגליל"] += 1; }
+                break;
+        }
+
+        CurrentQuizQuestion++;
+
+        if (CurrentQuizQuestion >= QuizQuestions.Count)
+        {
+            UltimateDestination = DestinationScores.OrderByDescending(kv => kv.Value).First().Key;
+        }
+    }
+
+    private void RestartQuiz()
+    {
+        CurrentQuizQuestion = 0;
+        UltimateDestination = string.Empty;
+        DestinationScores.Keys.ToList().ForEach(k => DestinationScores[k] = 0);
+    }
+
+    // משחק לחיצות
+    private int ClickCount = 0;
+    private int TimeLeft = 10;
+    private bool GameStarted = false;
+    private bool ShowScore = false;
+    private List<int> ClickScores = new();
+
+    private async Task StartClickGame()
+    {
+        ClickCount = 0;
+        TimeLeft = 10;
+        GameStarted = true;
+        ShowScore = false;
+
+        var timer = new System.Timers.Timer(1000);
+        timer.Elapsed += async (_, _) =>
+        {
+            TimeLeft--;
+            if (TimeLeft <= 0)
+            {
+                timer.Stop();
+                GameStarted = false;
+                ShowScore = true;
+                ClickScores.Add(ClickCount);
+                ClickScores = ClickScores.OrderByDescending(x => x).ToList();
+                await InvokeAsync(StateHasChanged);
+                
+            }
+            await InvokeAsync(StateHasChanged);
+        };
+        timer.Start();
+    }
+
+    private void Click() => ClickCount++;
+
+    [Inject] IJSRuntime JSRuntime { get; set; }
+}

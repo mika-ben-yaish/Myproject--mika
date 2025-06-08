@@ -1,0 +1,145 @@
+﻿
+@page "/joinuss"
+@inject MyProject.Data.MainDBService DbService
+@inject MyProject.Services.UserService UserService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<h3>התחברות</h3>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+<EditForm FormName="LoginForm" Model="loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="email">דוא"ל:</label>
+        <InputText id="email" class="form-control" @bind-Value="loginModel.Email" />
+    </div>
+
+    <div class="form-group">
+        <label for="password">סיסמה:</label>
+        <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">התחבר</button>
+</EditForm>
+<style>
+    /* סגנונות כלליים לגוף הדף */
+    body {
+        font-family: Arial, sans-serif; /* גופן ראשי */
+        background-color: #f4f4f4; /* צבע רקע עדין לדף */
+        margin: 0; /* ללא שוליים חיצוניים */
+        padding: 0; /* ללא ריפוד פנימי */
+    }
+
+    /* סגנונות לכותרת H3 */
+    h3 {
+        text-align: center; /* מרכוז טקסט */
+        color: #333; /* צבע טקסט אפור כהה */
+    }
+
+    /* סגנונות לטופס עצמו */
+    form {
+        max-width: 400px; /* רוחב מרבי לטופס */
+        margin: 0 auto; /* מרכוז אופקי של הטופס */
+        padding: 20px; /* ריפוד פנימי */
+        background: white; /* רקע לבן לטופס */
+        border-radius: 10px; /* פינות מעוגלות */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* צל עדין סביב הטופס */
+    }
+
+    /* סגנונות לתוויות (labels) של שדות הטופס */
+    label {
+        display: block; /* הצגה כבלוק (תופס שורה שלמה) */
+        margin-bottom: 5px; /* מרווח תחתון */
+        font-weight: bold; /* גופן מודגש */
+    }
+
+    /* סגנונות לשדות הקלט (input) של הטופס */
+    input {
+        width: 100%; /* רוחב מלא של השדה */
+        padding: 8px; /* ריפוד פנימי */
+        margin-bottom: 10px; /* מרווח תחתון */
+        border: 1px solid #ddd; /* גבול דק ובהיר */
+        border-radius: 5px; /* פינות מעוגלות */
+    }
+
+    /* סגנונות לכפתור השליחה */
+    button {
+        background-color: #5cb85c; /* צבע רקע ירוק */
+        color: white; /* צבע טקסט לבן */
+        padding: 10px; /* ריפוד פנימי */
+        border: none; /* ללא גבול */
+        border-radius: 5px; /* פינות מעוגלות */
+        cursor: pointer; /* סמן עכבר מצביע */
+    }
+
+        /* סגנונות לכפתור בריחוף עכבר */
+        button:hover {
+            background-color: #4cae4c; /* צבע רקע ירוק כהה יותר בריחוף */
+        }
+
+    /* סגנונות כלליים לאלמנטי div (משמש למרווחים וקבוצות) */
+    div {
+        margin-bottom: 10px; /* מרווח תחתון */
+    }
+
+    /* סגנונות להודעת הצלחה */
+    .success-message {
+        color: green; /* צבע טקסט ירוק */
+        text-align: center; /* מרכוז טקסט */
+        margin-bottom: 10px; /* מרווח תחתון */
+    }
+
+    /* סגנונות להודעת שגיאה */
+    .error-message {
+        color: red; /* צבע טקסט אדום */
+        text-align: center; /* מרכוז טקסט */
+        margin-bottom: 10px; /* מרווח תחתון */
+    }
+</style>
+@code {
+    private LoginModel loginModel = new();
+    private string errorMessage;
+
+    private void HandleLogin()
+    {
+        var users = DbService.GetAllUsers();
+
+        string email = loginModel.Email?.Trim().ToLower() ?? "";
+        string password = loginModel.Password?.Trim() ?? "";
+
+        var user = users.FirstOrDefault(u =>
+            u.GetEmail()?.Trim().ToLower() == email &&
+            u.GetPassword()?.Trim() == password);
+
+        if (user != null)
+        {
+            Console.WriteLine($"[LOGIN SUCCESS] UserID: {user.GetId()}, Role: {user.GetRole()}");
+            UserService.SetUser(user);
+
+            var role = user.GetRole()?.Trim().ToLower();
+            if (role == "admin")
+                NavigationManager.NavigateTo("/users");
+            else
+                NavigationManager.NavigateTo("/user-dashboard");
+        }
+        else
+        {
+            Console.WriteLine("[LOGIN FAIL] No matching user found.");
+            errorMessage = "שם משתמש או סיסמה שגויים.";
+        }
+    }
+
+
+    private class LoginModel
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+}

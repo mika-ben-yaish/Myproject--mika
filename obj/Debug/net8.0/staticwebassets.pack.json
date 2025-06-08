@@ -1,0 +1,101 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\MyProject.bundle.scp.css",
+      "PackagePath": "staticwebassets\\MyProject.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\17814923351_i.jpg",
+      "PackagePath": "staticwebassets\\Images\\17814923351_i.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\530903709317100640360no.jpg",
+      "PackagePath": "staticwebassets\\Images\\530903709317100640360no.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\Galil.jpg",
+      "PackagePath": "staticwebassets\\Images\\Galil.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\Heart.jpg",
+      "PackagePath": "staticwebassets\\Images\\Heart.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\Israel.jpg",
+      "PackagePath": "staticwebassets\\Images\\Israel.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\TLV.jpg",
+      "PackagePath": "staticwebassets\\Images\\TLV.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\color.jpg",
+      "PackagePath": "staticwebassets\\Images\\color.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\eilat.jpg",
+      "PackagePath": "staticwebassets\\Images\\eilat.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\golda14-460x305.jpg",
+      "PackagePath": "staticwebassets\\Images\\golda14-460x305.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\images (1).jpg",
+      "PackagePath": "staticwebassets\\Images\\images (1).jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\images.jpg",
+      "PackagePath": "staticwebassets\\Images\\images.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\large_i_Travel_Jerusalem_Media_Room_Western_Wall_from_above_ec89f8fbc3.jpg",
+      "PackagePath": "staticwebassets\\Images\\large_i_Travel_Jerusalem_Media_Room_Western_Wall_from_above_ec89f8fbc3.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\open.jpg",
+      "PackagePath": "staticwebassets\\Images\\open.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\shutterstock_1241140417_btjk9u.jpg",
+      "PackagePath": "staticwebassets\\Images\\shutterstock_1241140417_btjk9u.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\Images\\zanhanim.jpg",
+      "PackagePath": "staticwebassets\\Images\\zanhanim.jpg"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\User\\source\\repos\\MyProject\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.MyProject.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.MyProject.props",
+      "PackagePath": "build\\MyProject.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.MyProject.props",
+      "PackagePath": "buildMultiTargeting\\MyProject.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.MyProject.props",
+      "PackagePath": "buildTransitive\\MyProject.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

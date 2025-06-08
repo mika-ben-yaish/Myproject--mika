@@ -1,0 +1,37 @@
+﻿@page "/test"
+@inject Data.DatabaseService DatabaseService
+
+<h3>Users</h3>
+<ul>
+    @foreach (var user in users)
+    {
+        <li>@user</li>
+    }
+</ul>
+
+<input @bind="newUser" placeholder="Enter name" />
+<button @onclick="AddUser">Add</button>
+
+@code {
+    private List<string> users = new();
+    private string newUser = "";
+
+    protected override void OnInitialized()
+    {
+        users = DatabaseService.GetUsers();
+    }
+
+    private void AddUser()
+    {
+        if (!string.IsNullOrWhiteSpace(newUser))
+        {
+            DatabaseService.AddUser(newUser);
+            users = DatabaseService.GetUsers();
+            newUser = "";
+        }
+    }
+}
+
+
+
+

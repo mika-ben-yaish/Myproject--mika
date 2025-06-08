@@ -1,0 +1,100 @@
+﻿@page "/user-dashboard"
+@rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+@inject MyProject.Services.UserService UserService
+
+<PageTitle>פרטי משתמש</PageTitle>
+
+
+@if (user == null)
+{
+    <p class="no-user-msg">לא מחובר משתמש.</p>
+}
+else
+{
+    <table class="user-details-table">
+        <tbody>
+            <tr>
+                <th>שם מלא</th>
+                <td>@user.GetFullName()</td>
+            </tr>
+            <tr>
+                <th>אימייל</th>
+                <td>@user.GetEmail()</td>
+            </tr>
+            <tr>
+                <th>תפקיד</th>
+                <td>@user.GetRole()</td>
+            </tr>
+        </tbody>
+    </table>
+}
+<style>
+    /* סגנונות עבור כותרת H3 */
+    h3 {
+        text-align: center; /* מיישר את הטקסט למרכז */
+        color: #333;        /* קובע את צבע הטקסט לאפור כהה מאוד (כמעט שחור) */
+        margin-bottom: 20px; /* קובע מרווח תחתון של 20 פיקסלים מתחת לכותרת */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* מגדיר את משפחת הגופנים. העדפה ל-Segoe UI, אם לא זמין אז Tahoma וכו'. */
+    }
+
+    /* סגנונות עבור טבלת פרטי המשתמש */
+    .user-details-table {
+        margin: 0 auto;     /* ממקם את הטבלה במרכז הדף (0 מרווח עליון/תחתון, auto מרווח ימין/שמאל) */
+        width: 60%;         /* קובע את רוחב הטבלה ל-60% מרוחב האלמנט המכיל אותה */
+        border-collapse: collapse; /* מאחד את גבולות התאים בטבלה, במקום להציג גבולות כפולים */
+        direction: rtl;     /* מגדיר את כיוון הטקסט והפריסה מימין לשמאל (Right-To-Left) - חשוב לעברית */
+        font-family: Arial, sans-serif; /* מגדיר את משפחת הגופנים עבור הטבלה */
+        background-color: #fff; /* צבע רקע של הטבלה - לבן */
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* מוסיף צל עדין סביב הטבלה: 
+                                                   0px אופקי, 2px אנכי, 6px טשטוש, צבע שחור עם שקיפות 0.1 */
+    }
+
+    /* סגנונות עבור כותרות התאים  בטבלה */
+    .user-details-table th,
+    .user-details-table td {
+        border: 1px solid #ccc; /* קובע גבול דק (1px) ואפור בהיר (#ccc) מסביב לכל תא */
+        padding: 12px 16px; /* קובע ריפוד פנימי בתוך כל תא: 12px למעלה/למטה, 16px לימין/לשמאל */
+        text-align: right;  /* מיישר את הטקסט בתוך התא לימין */
+    }
+
+    /* סגנונות עבור כותרות העמודות  בטבלה */
+    .user-details-table th {
+        background-color: #5bc0de; /* צבע רקע של כותרות העמודות - כחול תכלת */
+        color: white;       /* צבע טקסט של כותרות העמודות - לבן */
+        font-weight: bold;  /* עובי הגופן של כותרות העמודות - מודגש */
+        width: 30%;         /* קובע את רוחב כותרות העמודות ל-30% מהרוחב הכולל של הטבלה (יתחלק בין הכותרות) */
+    }
+
+    /* סגנונות עבור שורות הטבלה הזוגיות (second child) */
+    .user-details-table tr:nth-child(even) {
+        background-color: #f9f9f9; /* צבע רקע בהיר מאוד (#f9f9f9) עבור שורות זוגיות, ליצירת אפקט "זברה" */
+    }
+
+    /* סגנונות עבור הודעת "אין משתמש" */
+    .no-user-msg {
+        text-align: center; /* מיישר את הטקסט למרכז */
+        color: red;         /* קובע את צבע הטקסט לאדום */
+        font-weight: bold;  /* עובי הגופן - מודגש */
+    }
+</style>
+
+@code {
+    private MyProject.Models.User user;
+
+    protected override void OnInitialized()
+    {
+        user = UserService.GetUser();
+        UserService.OnUserChanged += UpdateUser;
+    }
+
+    private void UpdateUser()
+    {
+        user = UserService.GetUser();
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        UserService.OnUserChanged -= UpdateUser;
+    }
+}

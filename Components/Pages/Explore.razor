@@ -1,0 +1,191 @@
+﻿@page "/explore"
+
+<style>
+    /* עיצוב כללי */
+    body {
+        background-color: #E0FFFF; /* רקע תכלת פסטל */
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: black;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* עיצוב כותרות */
+    h3 {
+        text-align: center;
+        color: black;
+        font-family: "Georgia", serif; /* פונט אלגנטי */
+        font-size: 28px; /* גודל נוח */
+        margin-top: 20px; /* מרווח מהעליון */
+    }
+
+    p {
+        color: black;
+        font-family: "Georgia", serif;
+        font-size: 18px; /* גודל קריא */
+        text-align: center; /* מרכז את הטקסט */
+        margin-top: 10px;
+    }
+
+    /* עיצוב רשימות */
+    ul, li {
+        color: black;
+        font-size: 16px;
+        font-family: "Verdana", sans-serif;
+    }
+
+    /* עיצוב תמונות */
+    img {
+        border-radius: 10px; /* עיגול הקצוות */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+    }
+
+    div {
+        margin-top: 20px;
+    }
+</style>
+
+<PageTitle>Discover Destinations</PageTitle>
+
+<h3>✨ יעדים מעניינים בישראל ✨</h3>
+<p>לחצו על התמונות וגלו מידע ומלונות מומלצים באיזור</p>
+
+<div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center; margin-top:20px;">
+    @foreach (var destination in Destinations)
+    {
+        <div style="position:relative;">
+            <img src="@destination.ImageUrl" alt="@destination.Name"
+                 style="width:200px; height:150px;"
+                 @onclick="() => OpenModal(destination)" />
+            <p style="text-align:center; font-weight:bold;">@destination.Name</p>
+        </div>
+    }
+</div>
+
+@if (IsModalOpen)
+{
+    <div style="position:fixed; top:0; left:0; width:100%; height:100%;
+                background:rgba(0,0,0,0.6); display:flex; justify-content:center;
+                align-items:center; z-index:1000;">
+        <div style="background:white; border-radius:10px; padding:20px;
+                    max-width:500px; text-align:center; box-shadow:0 4px 8px
+                    rgba(0, 0, 0, 0.5);">
+            <h2 style="color:#0078D7;">@SelectedDestination.Name</h2>
+            <p>@SelectedDestination.Description</p>
+            <h3 style="color:#0078D7; margin-top:20px;">כמה מבתי המלונות המומלצים ביותר באיזור:</h3>
+            <ul style="list-style-type:none; padding:0;">
+                @foreach (var link in SelectedDestination.HotelLinks)
+                {
+                    <li>
+                        <a href="@link" target="_blank" style="text-decoration:none; color:#0078D7;">
+                            מלון מומלץ
+                        </a>
+                    </li>
+                }
+            </ul>
+            <button style="margin-top:10px; padding:10px 20px; background:#0078D7;
+                           color:white; border:none; border-radius:5px;"
+                    @onclick="CloseModal">
+                סגור
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    /* מחלקה לייצוג יעד */
+    public class Destination
+    {
+        public string Name { get; set; } /* שם היעד */
+        public string Description { get; set; } /* תיאור היעד */
+        public string ImageUrl { get; set; } /* כתובת תמונת היעד */
+        public List<string> HotelLinks { get; set; } /* רשימת קישורים לבתי מלון */
+    }
+
+    private List<Destination> Destinations = new List<Destination>(); /* רשימת היעדים */
+    private bool IsModalOpen = false; /* משתנה לשליטה בתצוגת החלון הקופץ */
+    private Destination SelectedDestination; /* משתנה שמחזיק את היעד שנבחר */
+
+    protected override void OnInitialized()
+    {
+        /* אתחול רשימת היעדים עם כל היעדים */
+        Destinations = new List<Destination>
+        {
+            new Destination
+            {
+                Name = "ים המלח",
+                Description = "הנקודה הנמוכה ביותר בעולם עם מי מלח מרפאים. חוויה מרגיעה ובלתי נשכחת!",
+                ImageUrl = "images/17814923351_i.jpg",
+                HotelLinks = new List<string>
+                {
+                    "http://isrotel.co.il/isrotel-hotels/dead-sea-hotels/%D7%99%D7%A9%D7%A8%D7%95%D7%98%D7%9C-%D7%99%D7%9D-%D7%94%D7%9E%D7%9C%D7%97/",
+                    "https://www.prima.co.il/oasis-spa-club-hotel-dead-sea",
+                    "https://www.herods.co.il/herods-hotels/herods-dead-sea"
+                }
+            },
+            new Destination
+            {
+                Name = "ירושלים",
+                Description = "עיר הבירה של ישראל עם היסטוריה עשירה, אתרים קדושים ואווירה ייחודית.",
+                ImageUrl = "images/530903709317100640360no.jpg",
+                HotelLinks = new List<string>
+                {
+                    "https://www.isrotel.co.il/isrotel-hotels/jerusalem/orient/",
+                    "https://theatronhotel.com/he/",
+                    "https://www.ymca3arches.co.il/"
+                }
+            },
+            new Destination
+            {
+                Name = "אילת",
+                Description = "עיר הנופש הדרומית עם חופי ים מדהימים, ריף דולפינים וקניות פטורות ממס.",
+                ImageUrl = "images/eilat.jpg",
+                HotelLinks = new List<string>
+                {
+                    "https://www.isrotel.co.il/isrotel-hotels/eilat-hotels/%D7%99%D7%A9%D7%A8%D7%95%D7%98%D7%9C-%D7%99%D7%9D-%D7%A1%D7%95%D7%A3/",
+                    "https://www.astralhotels.co.il/astral-queen-of-sheba-offers",
+                    "https://www.isrotel.co.il/isrotel-hotels/eilat-hotels/%D7%99%D7%A9%D7%A8%D7%95%D7%98%D7%9C-%D7%90%D7%92%D7%9E%D7%99%D7%9D/"
+                }
+            },
+            new Destination
+            {
+                Name = "תל אביב",
+                Description = "עיר תוססת עם חופי ים יפים, חיי לילה ותרבות עשירה.",
+                ImageUrl = "images/TLV.jpg",
+                HotelLinks = new List<string>
+                {
+                    "https://www.danhotels.co.il/TelAvivHotels/DanTelAvivHotel",
+                    "https://www.isrotel.co.il/isrotel-hotels/tel-aviv/%D7%99%D7%A9%D7%A8%D7%95%D7%98%D7%9C-%D7%98%D7%90%D7%95%D7%A8/",
+                    "https://www.isrotel.co.il/isrotel-hotels/tel-aviv/%D7%A8%D7%95%D7%99%D7%90%D7%9C-%D7%91%D7%99%D7%A5-%D7%AA%D7%9C-%D7%90%D7%91%D7%99%D7%91/"
+                }
+            },
+            new Destination
+            {
+                Name = "הגליל",
+                Description = "אזור ירוק ומרגיע עם נופים עוצרי נשימה ואוויר צח.",
+                ImageUrl = "images/Galil.jpg",
+                HotelLinks = new List<string>
+                {
+                    "https://galilion.co.il/",
+                    "https://herbertsamuel.com/bayit-bagalil-boutique-hotel/",
+                    "http://edmond-hotel.co.il/"
+                }
+            }
+        };
+    }
+
+    /* פונקציה לפתיחת החלון הקופץ */
+    private void OpenModal(Destination destination)
+    {
+        SelectedDestination = destination; /* שמירת היעד שנבחר */
+        IsModalOpen = true; /* פתיחת החלון הקופץ */
+    }
+
+    /* פונקציה לסגירת החלון הקופץ */
+    private void CloseModal()
+    {
+        IsModalOpen = false; /* סגירת החלון הקופץ */
+        SelectedDestination = null; /* ניקוי המשתנה */
+    }
+}

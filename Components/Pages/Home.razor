@@ -1,0 +1,99 @@
+﻿@page "/" 
+<PageTitle>ברוכים הבאים</PageTitle> <!-- קובע את הכותרת של העמוד -->
+
+<style>
+    /* עיצוב כללי של הדף */
+    body {
+        margin: 0; /* מסיר שוליים */
+        padding: 0; /* מסיר ריווח פנימי */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* גופן קריא ונוח */
+        background: linear-gradient(to bottom right, #a0e9ff, #dff9fb); /* רקע בגווני תכלת עם מעבר צבע */
+        color: #222; /* צבע טקסט כהה לקריאות טובה */
+        text-align: center; /* מרכז את כל הטקסט */
+    }
+
+    /* עיצוב כותרות ופסקאות */
+    h1, h2, p {
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* הוספת צל עדין */
+        margin: 0 auto; /* ממרכז אלמנטים */
+        padding: 10px; /* ריווח פנימי */
+    }
+
+    /* עיצוב כותרת ראשית */
+    h1 {
+        margin-top: 40px; /* מרווח מהחלק העליון */
+        font-size: 42px; /* גודל אותיות גדול */
+        color: #004d7a; /* כחול כהה להבלטה */
+    }
+
+    /* עיצוב טקסט רגיל */
+    p {
+        font-size: 20px; /* גודל קריא ונוח */
+        margin-bottom: 30px; /* ריווח מתחת לטקסט */
+        color: #333; /* צבע כהה לקריאות טובה */
+    }
+
+    /* עיצוב תמונות */
+    img {
+        border-radius: 15px; /* קצוות מעוגלים */
+        margin: 20px; /* מרווח בין התמונות */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* הוספת צל עדין */
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* אנימציה חלקה */
+        width: 220px; /* רוחב קבוע */
+        height: auto; /* שמירת פרופורציות */
+    }
+
+    /* אפקט תמונה בעת ריחוף */
+    img:hover {
+        transform: scale(1.05); /* הגדלה בעת מעבר עכבר */
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25); /* חיזוק הצל */
+    }
+
+    /* עיצוב כפתור */
+    .button {
+        margin-top: 25px; /* מרווח מלמעלה */
+        padding: 12px 28px; /* גודל הכפתור */
+        font-size: 18px; /* גודל אותיות */
+        background: #e0f7ff; /* צבע רקע בהיר */
+        color: #004d7a; /* צבע טקסט */
+        border: none; /* מסיר גבול */
+        border-radius: 30px; /* כפתור מעוגל */
+        cursor: pointer; /* שינוי סמן בעת ריחוף */
+        box-shadow: 4px 4px 10px #b0d4e3, -4px -4px 10px #ffffff; /* אפקט תלת-ממד */
+        transition: all 0.3s ease; /* אנימציה חלקה */
+    }
+
+    /* אפקט הכפתור בעת ריחוף */
+    .button:hover {
+        background-color: #c8f0ff; /* שינוי צבע רקע */
+        transform: scale(1.05); /* הגדלה קלה */
+        box-shadow: 6px 6px 16px #b0d4e3, -6px -6px 16px #ffffff; /* חיזוק הצל */
+    }
+
+    /* אפקט הכפתור בעת לחיצה */
+    .button:active {
+        transform: scale(0.97); /* הקטנה קלה */
+        box-shadow: inset 2px 2px 5px #a0c9db, inset -2px -2px 5px #ffffff; /* אפקט לחיצה פנימי */
+    }
+</style>
+
+<!-- כותרת הדף -->
+<h1>ברוכים הבאים לאתר שלי - אתר להכרת ארץ ישראל</h1>
+<p>היכנסו ותהנו מחוויה מיוחדת ולמידה משמעותית על ישראל</p>
+
+<!-- תמונות -->
+<img src="images/Heart.jpg" alt="לב">
+<img src="images/Israel.jpg" alt="ישראל">
+
+<!-- כפתור מעבר לעמוד התחברות -->
+<button class="button" @onclick="NavigateToLogIn">התחברות</button>
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; } /* מנגנון ניווט */
+
+    private void NavigateToLogIn()
+    {
+        Navigation.NavigateTo("/joinuss"); /* מעבר לעמוד התחברות */
+    }
+}

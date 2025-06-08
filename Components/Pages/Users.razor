@@ -1,0 +1,134 @@
+﻿@page "/users"
+@inject MyProject.Data.MainDBService DbService
+@using MyProject.Models
+
+<h3>רשימת משתמשים</h3>
+<style>
+    /* סגנונות כלליים לגוף הדף */
+    body {
+        background-image: url('https://files.cdn-files-a.com/uploads/842711/normal_640b33d79427a.jpg'); /* הגדרת תמונה כרקע הדף */
+        background-size: cover; /* מכסה את כל שטח הרקע */
+        background-position: center; /* ממקם את התמונה במרכז */
+        background-attachment: fixed; /* מקבע את תמונת הרקע בעת גלילה */
+        margin: 0; /* מסיר שוליים חיצוניים */
+        padding: 0; /* מסיר ריפוד פנימי */
+        height: 100%; /* ודא שהגוף יתפרס לכל הגובה הזמין */
+        font-family: Arial, sans-serif; /* מגדיר גופן כללי לדף */
+    }
+
+    /* סגנונות לקונטיינר שמרכז את תיבת המשתמש */
+    .user-container {
+        display: flex; /* שימוש ב-Flexbox לפריסה */
+        justify-content: center; /* מרכוז אופקי */
+        align-items: center; /* מרכוז אנכי */
+        padding: 30px; /* ריפוד פנימי */
+        min-height: 100vh; /* גובה מינימלי של 100% מגובה אזור התצוגה */
+    }
+
+    /* סגנונות לתיבת המשתמש עצמה */
+    .user-box {
+        background-color: rgba(255, 255, 255, 0.95); /* רקע לבן שקוף במקצת */
+        padding: 2rem; /* ריפוד פנימי */
+        border-radius: 8px; /* פינות מעוגלות */
+        max-width: 1000px; /* רוחב מרבי */
+        width: 100%; /* רוחב מלא */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* צל עדין */
+    }
+
+    /* סגנונות לכותרת H1 */
+    h1 {
+        text-align: center; /* מרכוז טקסט */
+        color: #5f4b5a; /* צבע כהה ייחודי */
+        margin-bottom: 1rem; /* מרווח תחתון */
+    }
+
+    /* סגנונות לטבלה המעוצבת */
+    table.styled-table {
+        width: 100%; /* רוחב מלא */
+        border-collapse: collapse; /* איחוד גבולות התאים */
+        font-size: 0.95rem; /* גודל גופן מעט קטן */
+    }
+
+        /* סגנונות לכותרות (th) ותאי נתונים (td) בטבלה */
+        table.styled-table th,
+        table.styled-table td {
+            border: 1px solid #ddd; /* גבול דק ובהיר */
+            padding: 12px; /* ריפוד פנימי */
+            text-align: center; /* מרכוז טקסט */
+        }
+
+        /* סגנונות לכותרות (th) בטבלה */
+        table.styled-table th {
+            background-color: #f7b7d3; /* צבע רקע ורוד בהיר */
+            color: white; /* צבע טקסט לבן */
+        }
+
+    /* סגנונות לכפתור המחיקה */
+    .delete-btn {
+        background-color: #e74c3c; /* צבע רקע אדום */
+        color: white; /* צבע טקסט לבן */
+        border: none; /* ללא גבול */
+        padding: 6px 12px; /* ריפוד פנימי */
+        border-radius: 4px; /* פינות מעוגלות */
+        cursor: pointer; /* סמן עכבר מצביע */
+    }
+
+        /* סגנונות לכפתור המחיקה בריחוף עכבר */
+        .delete-btn:hover {
+            background-color: #c0392b; /* צבע רקע אדום כהה יותר */
+        }
+</style>
+@if (users == null)
+{
+    <p>טוען נתונים...</p>
+}
+else if (users.Count == 0)
+{
+    <p>אין משתמשים במערכת.</p>
+}
+else
+{
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>מזהה</th>
+                <th>שם מלא</th>
+                <th>אימייל</th>
+                <th>סיסמה</th>
+                <th>תפקיד</th>
+                <th>פעולות</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < users.Count; i++)
+            {
+                User user = users[i];
+                <tr>
+                    <td>@user.GetId()</td>
+                    <td>@user.GetFullName()</td>
+                    <td>@user.GetEmail()</td>
+                    <td>@user.GetPassword()</td>
+                    <td>@user.GetRole()</td>
+                    <td>
+                        <button @onclick="() => DeleteUser(user.GetId())">🗑️ מחק</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<User> users;
+
+    protected override void OnInitialized()
+    {
+        users = DbService.GetAllUsers();
+    }
+
+    private void DeleteUser(int id)
+    {
+        DbService.DeleteUser(id); // זו הפונקציה שלך
+        users = DbService.GetAllUsers(); // טוען מחדש את המשתמשים
+    }
+}

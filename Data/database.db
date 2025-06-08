@@ -1,0 +1,9 @@
+﻿
+CREATE TABLE NewTable (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    FullName TEXT NOT NULL,
+    Email TEXT NOT NULL,
+    Password TEXT NOT NULL,
+    Role TEXT
+);
+
